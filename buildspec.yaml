@@ -4,7 +4,7 @@ phases:
   install:
     runtime-versions:
       nodejs: 18
-  
+
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
@@ -12,22 +12,21 @@ phases:
       - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
-  
+
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
-      - docker tag $REPOSITORY_URI:$IMAGE_TAG $REPOSITORY_URI:latest
-  
+      - docker build -t next4 .
+      - docker tag next4:latest 442359104502.dkr.ecr.us-east-1.amazonaws.com/next4:latest
+
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - docker push $REPOSITORY_URI:latest
+      - docker push 442359104502.dkr.ecr.us-east-1.amazonaws.com/next4:latest
       - echo Writing image definitions file...
-      - echo "{\"ImageURI\":\"$REPOSITORY_URI:$IMAGE_TAG\"}" > imageDefinition.json
+      - echo "{\"ImageURI\":\"442359104502.dkr.ecr.us-east-1.amazonaws.com/next4:latest\"}" > imageDefinition.json
 
 artifacts:
   files:
@@ -37,4 +36,4 @@ artifacts:
 
 cache:
   paths:
-    - 'node_modules/**/*'
+    - "node_modules/**/*"
